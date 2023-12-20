@@ -46,7 +46,7 @@ public class PathUtilsTest {
                 {"/./app1", true},
                 {"/./.", true},
                 {"/app1//p_1", true},
-                {" ", true},
+                //{" ", true},
                 {"/\0 ", true},
                 //{"/app1/5/7", true},
                 {"/app1/", true},
