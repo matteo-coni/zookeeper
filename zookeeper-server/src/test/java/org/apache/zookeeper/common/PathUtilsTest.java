@@ -69,7 +69,7 @@ public class PathUtilsTest {
     }
 
     @Test
-    public void testValidPath(){
+    public void ValidPathTest(){
 
         IllegalArgumentException error = null;
 

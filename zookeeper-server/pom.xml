@@ -193,12 +193,12 @@
       <artifactId>commons-io</artifactId>
       <scope>compile</scope>
     </dependency>
-      <dependency>
+      <!--<dependency>
           <groupId>org.junit.jupiter</groupId>
           <artifactId>junit-jupiter</artifactId>
           <version>RELEASE</version>
           <scope>test</scope>
-      </dependency>
+      </dependency>-->
   </dependencies>
 
   <build>
@@ -391,9 +391,11 @@
               <verbose>true</verbose>
               <targetClasses>
                 <param>org.apache.zookeeper.common.PathUtils</param>
+                <param>org.apache.zookeeper.server.DataTree</param>
               </targetClasses>
               <targetTests>
                 <param>org.apache.zookeeper.common.PathUtilsTest</param>
+                <param>org.apache.zookeeper.server.CreateNodeDataTreeTest</param>
               </targetTests>
               <excludedMethods>
               </excludedMethods>
