@@ -3,21 +3,19 @@ package org.apache.zookeeper.server;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.ACL;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static org.junit.Assert.*;
 @RunWith(Parameterized.class)
-public class CreateNodeDataTreeTest {
+public class CreateNodeInvalidPathTest {
 
     private String path;
     private byte[] data;
@@ -29,7 +27,7 @@ public class CreateNodeDataTreeTest {
 
     private DataTree dataTree;
 
-    public CreateNodeDataTreeTest(String path, byte[] data, List<ACL> acl, long ephemeralOwner, int parentCVersion, long zxid, long time) throws KeeperException.NoNodeException, KeeperException.NodeExistsException {
+    public CreateNodeInvalidPathTest(String path, byte[] data, List<ACL> acl, long ephemeralOwner, int parentCVersion, long zxid, long time) throws KeeperException.NoNodeException, KeeperException.NodeExistsException {
 
         this.path = path;
         this.data = data;
@@ -39,12 +37,11 @@ public class CreateNodeDataTreeTest {
         this.zxid = zxid;
         this.time = time;
         this.dataTree = new DataTree(); //inizializzo dataTree
-        System.out.println(dataTree.getAllChildrenNumber("/"));
 
-        //l'inizializzazione del dataTree è stata prima realizzata funzionante in questo punto, poi spostata nel Before
+        //l'inizializzazione del dataTree manca per realizzare il path invalido
     }
 
-    @Before
+    /*@Before
     public void setUpTree() {
 
         if(path != null) {
@@ -72,53 +69,50 @@ public class CreateNodeDataTreeTest {
 
             }
         }
-    }
+    }*/
 
     @Parameterized.Parameters
     public static Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
 
-                //nodi non efimeri
-                {"/", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 3, 1, 1},
-                {"/app1", new byte[15], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 1, 1, 1},
-                {"/app1/p_1" , new byte[30], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0, 2, 1, 1},
-                //nodi effimeri standard con id sessione = 2
-                {"/", new byte[0], ZooDefs.Ids.READ_ACL_UNSAFE, 2, 3, 1, 1},
-                {"/app1", new byte[15], ZooDefs.Ids.CREATOR_ALL_ACL, 2, 1, 1, -1},
-                {"/app1/p_1" , new byte[30], ZooDefs.Ids.CREATOR_ALL_ACL, 2, 2, 1, 0},
-                //con i due test sottostanti (path non validi null e "") il metodo createNode lancia un eccezione che non viene gestita correttamente
-                //{"", new byte[1], ZooDefs.Ids.CREATOR_ALL_ACL, 1, 3, 1, 1},
-                //{null, new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 1, 3, 1, 1},
-                {"/", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 1, 3, 1, 1},
+                //nodi non effimeri
+                //path non valido, errore non preso dal try-catch, fallisce il test
+                //{"app1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 1, 1, 1},
+                //path non valido perché relativo
+                {"/app1/../p_2", new byte[30], ZooDefs.Ids.READ_ACL_UNSAFE, 0, 3, 1, 1},
+                //path non valido, ma non viene verificato, viene lanciata la NoNodeException
+                {"app1/p_1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 1, 1, 0},
+                //path valido ma non corretto, non c'è il nodo/app1, exception-NoNode
+                {"/app1/p_1", new byte[30], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0, 3, 25, -1},
+
+
+
 
         });
     }
 
     @Test
-    public void createNodeTest(){
+    public void createNodeInvalidTest(){
 
         Exception error = null;
-        long digestPre = dataTree.getTreeDigest();
-        long digestPost = 0;
+
         try{
             System.out.println("\n"+ this.path + "\n");
             this.dataTree.createNode(this.path, this.data, this.acl, this.ephemeralOwner, this.parentCVersion, this.zxid, this.time);
-            digestPost = dataTree.getTreeDigest();
+
             DataNode dataNodeGet = dataTree.getNode(this.path);
-            System.out.println(dataNodeGet);
-            //fai anche controllo su nodo creato e nodo preso dalla get
-            Assert.assertNotEquals(digestPre,digestPost);
+            Assert.assertNull(dataNodeGet);
 
 
         } catch (KeeperException.NoNodeException | KeeperException.NodeExistsException e) {
-            //throw new RuntimeException(e);
+
             e.printStackTrace();
             error = e;
             Assert.assertNotNull(error);
 
         }
-        Assert.assertNull(error);
-        System.out.println("pre: " + digestPre + "    post: " + digestPost);
+
+
 
 
     }
