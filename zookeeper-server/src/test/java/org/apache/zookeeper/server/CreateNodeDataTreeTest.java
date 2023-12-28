@@ -78,7 +78,7 @@ public class CreateNodeDataTreeTest {
     public static Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
 
-                //nodi non efimeri
+                //nodi non effimeri
                 {"/", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 3, 1, 1},
                 {"/app1", new byte[15], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 1, -1, 1},
                 {"/app1/p_1" , new byte[30], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0, -2, 0, 1},
@@ -98,7 +98,7 @@ public class CreateNodeDataTreeTest {
                 //aggiunto nodo container
                 {"/app1", new byte[1000], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0x8000000000000000L, 0, 0, 1},
                 // start with /zookeeper/quota
-                //{"/zookeeper/quota/zookeeper_stats", new byte[100], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 2, 1, 1},
+                {"/zookeeper/quota/zookeeper_stats", new byte[100], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 2, 1, 1},
 
 
         });

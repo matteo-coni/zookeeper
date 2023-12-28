@@ -388,6 +388,7 @@
             <version>${pitest.version}</version>-->
             <configuration>
               <timeoutConstant>6000</timeoutConstant>
+              <maxMutationsPerClass>5</maxMutationsPerClass>
               <verbose>true</verbose>
               <targetClasses>
                 <param>org.apache.zookeeper.common.PathUtils</param>
