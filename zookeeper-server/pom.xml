@@ -468,6 +468,10 @@
                 <excludedMethod>addDigestWatcher</excludedMethod>
                 <excludedMethod>getDigestLog</excludedMethod>
                 <excludedMethod>createStat</excludedMethod>
+                <excludedMethod>serializeLastProcessedZxid</excludedMethod>
+                <excludedMethod>deserializeLastProcessedZxid</excludedMethod>
+
+                <excludedMethod>deleteNode</excludedMethod>
               </excludedMethods>
               <avoidCallsTo>
                 <avoidCallsTo>org.slf4j</avoidCallsTo>

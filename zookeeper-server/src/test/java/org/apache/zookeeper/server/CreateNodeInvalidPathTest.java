@@ -78,12 +78,17 @@ public class CreateNodeInvalidPathTest {
                 //nodi non effimeri
                 //path non valido, errore non preso dal try-catch, fallisce il test
                 //{"app1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 1, 1, 1},
+
                 //path non valido perché relativo
                 {"/app1/../p_2", new byte[30], ZooDefs.Ids.READ_ACL_UNSAFE, 0, 3, 1, 1},
                 //path non valido, ma non viene verificato, viene lanciata la NoNodeException
                 {"app1/p_1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 1, 1, 0},
                 //path valido ma non corretto, non c'è il nodo/app1, exception-NoNode
                 {"/app1/p_1", new byte[30], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0, 3, 25, -1},
+                //path valido ma non corretto, nodo TTL
+                {"/app1/p_1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0xFF00000000000011L, 1, 1, 0},
+                //path valido ma non corretto, nodo container
+                {"app1/p_1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0x8000000000000000L, 1, 1, 0},
 
 
 
@@ -112,9 +117,10 @@ public class CreateNodeInvalidPathTest {
 
         }
 
-
-
-
     }
+
+
+
+
 
 }

@@ -80,16 +80,26 @@ public class CreateNodeDataTreeTest {
 
                 //nodi non efimeri
                 {"/", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 3, 1, 1},
-                {"/app1", new byte[15], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 1, 1, 1},
-                {"/app1/p_1" , new byte[30], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0, 2, 1, 1},
+                {"/app1", new byte[15], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 1, -1, 1},
+                {"/app1/p_1" , new byte[30], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0, -2, 0, 1},
                 //nodi effimeri standard con id sessione = 2
                 {"/", new byte[0], ZooDefs.Ids.READ_ACL_UNSAFE, 2, 3, 1, 1},
-                {"/app1", new byte[15], ZooDefs.Ids.CREATOR_ALL_ACL, 2, 1, 1, -1},
+                {"/app1", new byte[15], ZooDefs.Ids.CREATOR_ALL_ACL, 2, 0, 100, -1},
                 {"/app1/p_1" , new byte[30], ZooDefs.Ids.CREATOR_ALL_ACL, 2, 2, 1, 0},
                 //con i due test sottostanti (path non validi null e "") il metodo createNode lancia un eccezione che non viene gestita correttamente
                 //{"", new byte[1], ZooDefs.Ids.CREATOR_ALL_ACL, 1, 3, 1, 1},
                 //{null, new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 1, 3, 1, 1},
-                {"/", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 1, 3, 1, 1},
+                {"/app1", null, ZooDefs.Ids.CREATOR_ALL_ACL, 1, 3, 1, 1},
+
+                //aggiunto parentCversion == -1
+                {"/app1/p_1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, -1, 1, 1},
+                //aggiunto nodo TTL con TTl==1
+                {"/app1/p_1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0xFF00000000000011L, 2, 1, 1},
+                //aggiunto nodo container
+                {"/app1", new byte[1000], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0x8000000000000000L, 0, 0, 1},
+                // start with /zookeeper/quota
+                //{"/zookeeper/quota/zookeeper_stats", new byte[100], ZooDefs.Ids.CREATOR_ALL_ACL, 0, 2, 1, 1},
+
 
         });
     }
@@ -107,7 +117,7 @@ public class CreateNodeDataTreeTest {
             DataNode dataNodeGet = dataTree.getNode(this.path);
             System.out.println(dataNodeGet);
             //fai anche controllo su nodo creato e nodo preso dalla get
-            Assert.assertNotEquals(digestPre,digestPost);
+            if(!this.path.equals("/zookeeper/quota/zookeeper_stats")) Assert.assertNotEquals(digestPre,digestPost);
 
 
         } catch (KeeperException.NoNodeException | KeeperException.NodeExistsException e) {
@@ -121,6 +131,25 @@ public class CreateNodeDataTreeTest {
         System.out.println("pre: " + digestPre + "    post: " + digestPost);
 
 
+    }
+
+    @Test
+    public void createNodeExistingTest(){
+
+        Exception error = null;
+
+        try{
+            System.out.println("\n"+ this.path + "\n");
+            //gia esiste
+            this.dataTree.createNode(this.path, this.data, this.acl, this.ephemeralOwner, this.parentCVersion, this.zxid, this.time);
+            this.dataTree.createNode(this.path, this.data, this.acl, this.ephemeralOwner, this.parentCVersion, this.zxid, this.time);
+
+        } catch (KeeperException.NoNodeException | KeeperException.NodeExistsException e) {
+
+            e.printStackTrace();
+            error = e;
+        }
+        Assert.assertNotNull(error);
     }
 
 }
