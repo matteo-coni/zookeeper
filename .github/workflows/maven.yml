@@ -23,5 +23,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: surefire-reports
-          path: bookkeeper-server/target/surefire-reports
-          #if-no-files-found: error
+          path: zookeeper-server/target/surefire-reports
+          if-no-files-found: error
