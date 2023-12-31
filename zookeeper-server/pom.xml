@@ -387,8 +387,8 @@
             <artifactId>pitest-maven</artifactId>
             <version>${pitest.version}</version>-->
             <configuration>
-              <timeoutConstant>6000</timeoutConstant>
-              <maxMutationsPerClass>5</maxMutationsPerClass>
+              <!--<timeoutConstant>6000</timeoutConstant>-->
+
               <verbose>true</verbose>
               <targetClasses>
                 <param>org.apache.zookeeper.common.PathUtils</param>
@@ -398,6 +398,7 @@
                 <param>org.apache.zookeeper.common.PathUtilsTest</param>
                 <param>org.apache.zookeeper.server.CreateNodeDataTreeTest</param>
                 <param>org.apache.zookeeper.server.CreateNodeInvalidPathTest</param>
+                <param>org.apache.zookeeper.server.DeleteNodeDataTreeTest</param>
               </targetTests>
               <excludedMethods>
                 <excludedMethod>testToExclude</excludedMethod>
@@ -472,7 +473,6 @@
                 <excludedMethod>serializeLastProcessedZxid</excludedMethod>
                 <excludedMethod>deserializeLastProcessedZxid</excludedMethod>
 
-                <excludedMethod>deleteNode</excludedMethod>
               </excludedMethods>
               <avoidCallsTo>
                 <avoidCallsTo>org.slf4j</avoidCallsTo>

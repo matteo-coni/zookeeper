@@ -93,7 +93,7 @@ public class CreateNodeDataTreeTest {
 
                 //aggiunto parentCversion == -1
                 {"/app1/p_1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, -1, 1, 1},
-                //aggiunto nodo TTL con TTl==1
+                //aggiunto nodo TTL con TTl==11
                 {"/app1/p_1", new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0xFF00000000000011L, 2, 1, 1},
                 //aggiunto nodo container
                 {"/app1", new byte[1000], ZooDefs.Ids.OPEN_ACL_UNSAFE, 0x8000000000000000L, 0, 0, 1},

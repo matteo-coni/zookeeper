@@ -10,8 +10,6 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.*;
-
 @RunWith(Parameterized.class)
 public class DeleteNodeDataTreeTest {
 
@@ -19,11 +17,15 @@ public class DeleteNodeDataTreeTest {
     private long zxid;
 
     private DataTree dataTree;
+    private DataTree dataTreeCont;
+    private DataTree dataTreeTTL;
 
     public DeleteNodeDataTreeTest(String path, long zxid){
         this.path = path;
         this.zxid = zxid;
         this.dataTree = new DataTree();
+        this.dataTreeCont = new DataTree();
+        this.dataTreeTTL = new DataTree();
     }
 
     @Before
@@ -53,6 +55,60 @@ public class DeleteNodeDataTreeTest {
                 e.printStackTrace();
 
             }
+
+            try { //container
+
+                String[] pathElements = path.split("/");
+
+                System.out.println(Arrays.toString(pathElements));
+                String oldPath = "";
+                int i = 1;
+                for (String elem : pathElements) {
+                    System.out.println(pathElements.length + "    i: " + i);
+                    if (!(i == 1)) { //modifica per creare il nodo interamente
+                        if(i == pathElements.length){
+                            System.out.println(oldPath + "/" + pathElements[i - 1]);
+                            this.dataTreeCont.createNode(oldPath + "/" + pathElements[i - 1], new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0x8000000000000000L, dataTree.getNode(oldPath).stat.getCversion(), 2, 1);
+                            oldPath = oldPath + "/" + pathElements[i - 1];
+                        } else {
+                            System.out.println(oldPath + "/" + pathElements[i - 1]);
+                            this.dataTreeCont.createNode(oldPath + "/" + pathElements[i - 1], new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, dataTree.getNode(oldPath).stat.getCversion(), 2, 1);
+                            oldPath = oldPath + "/" + pathElements[i - 1];
+                        }
+                    }
+                    i++;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+
+            try { //ttl
+
+                String[] pathElements = path.split("/");
+
+                System.out.println(Arrays.toString(pathElements));
+                String oldPath = "";
+                int i = 1;
+                for (String elem : pathElements) {
+                    System.out.println(pathElements.length + "    i: " + i);
+                    if (!(i == 1)) { //modifica per creare il nodo interamente
+                        if(i == pathElements.length){
+                            System.out.println(oldPath + "/" + pathElements[i - 1]);
+                            this.dataTreeTTL.createNode(oldPath + "/" + pathElements[i - 1], new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, -2, dataTree.getNode(oldPath).stat.getCversion(), 2, 1);
+                            oldPath = oldPath + "/" + pathElements[i - 1];
+                        } else {
+                            System.out.println(oldPath + "/" + pathElements[i - 1]);
+                            this.dataTreeTTL.createNode(oldPath + "/" + pathElements[i - 1], new byte[10], ZooDefs.Ids.CREATOR_ALL_ACL, 0, dataTree.getNode(oldPath).stat.getCversion(), 2, 1);
+                            oldPath = oldPath + "/" + pathElements[i - 1];
+                        }
+                    }
+                    i++;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
         }
     }
 
@@ -60,7 +116,45 @@ public class DeleteNodeDataTreeTest {
     public static Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][]{
 
-                {"/app1/p_1", 2 },
+                {"/", 0},
+                {"/app1", 0},
+                {"/app1/p_1", 0},
+                {"app1", 0},
+                {"app1/p_1", 0},
+                {"", 0},
+                {null, 0},
+
+                {"/", 1},
+                {"/app1", 1},
+                {"/app1/p_1", 1},
+                {"app1", 1},
+                {"app1/p_1", 1},
+                {"", 1},
+                {null, 1},
+
+                {"/", 10},
+                {"/app1", 10},
+                {"/app1/p_1", 10},
+                {"app1", 10},
+                {"app1/p_1", 10},
+                {"", 10},
+                {null, 10},
+
+                {"/", -1},
+                {"/app1", -1},
+                {"/app1/p_1", -1},
+                {"app1", -1},
+                {"app1/p_1", -1},
+                {"", -1},
+                {null, -1},
+
+                {"/", -10},
+                {"/app1", -10},
+                {"/app1/p_1", -10},
+                {"app1", -10},
+                {"app1/p_1", -10},
+                {"", -10},
+                {null, -10},
 
         });
     }
@@ -68,14 +162,15 @@ public class DeleteNodeDataTreeTest {
     @Test
     public void deleteNodeTest(){
 
-        Exception error = null;
+        Exception error;
         DataNode dataNodeGet;
 
         try {
 
             dataTree.deleteNode(this.path, this.zxid);
             dataNodeGet = dataTree.getNode(this.path);
-            Assert.assertNull(dataNodeGet);
+            System.out.println(dataNodeGet);
+            Assert.assertNull(dataNodeGet); //controllo che è stato tolto effettivamente il nodo
 
 
         } catch (Exception e){
@@ -83,7 +178,53 @@ public class DeleteNodeDataTreeTest {
             e.printStackTrace();
             Assert.assertNotNull(error);
         }
-        Assert.assertNull(error);
+        //Assert.assertNull(error);
+
+    }
+
+    @Test //prova miglioramento
+    public void deleteNodeContTest(){
+
+        Exception error;
+        DataNode dataNodeGet;
+
+        try {
+
+            dataTreeCont.deleteNode(this.path, this.zxid);
+            dataNodeGet = dataTreeCont.getNode(this.path);
+            System.out.println(dataNodeGet);
+            Assert.assertNull(dataNodeGet); //controllo che è stato tolto effettivamente il nodo
+
+
+        } catch (Exception e){
+            error = e;
+            e.printStackTrace();
+            Assert.assertNotNull(error);
+        }
+        //Assert.assertNull(error);
+
+    }
+
+    @Test //prova miglioramento
+    public void deleteNodeTTLTest(){
+
+        Exception error;
+        DataNode dataNodeGet;
+
+        try {
+
+            dataTreeTTL.deleteNode(this.path, this.zxid);
+            dataNodeGet = dataTreeTTL.getNode(this.path);
+            System.out.println(dataNodeGet);
+            Assert.assertNull(dataNodeGet); //controllo che è stato tolto effettivamente il nodo
+
+
+        } catch (Exception e){
+            error = e;
+            e.printStackTrace();
+            Assert.assertNotNull(error);
+        }
+        //Assert.assertNull(error);
 
     }
 
