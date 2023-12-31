@@ -178,11 +178,11 @@ public class DeleteNodeDataTreeTest {
             e.printStackTrace();
             Assert.assertNotNull(error);
         }
-        //Assert.assertNull(error);
+
 
     }
 
-    @Test //prova miglioramento
+    @Test //prova miglioramento Container
     public void deleteNodeContTest(){
 
         Exception error;
@@ -201,11 +201,10 @@ public class DeleteNodeDataTreeTest {
             e.printStackTrace();
             Assert.assertNotNull(error);
         }
-        //Assert.assertNull(error);
 
     }
 
-    @Test //prova miglioramento
+    @Test //miglioramento TTL
     public void deleteNodeTTLTest(){
 
         Exception error;
@@ -224,7 +223,7 @@ public class DeleteNodeDataTreeTest {
             e.printStackTrace();
             Assert.assertNotNull(error);
         }
-        //Assert.assertNull(error);
+
 
     }
 
