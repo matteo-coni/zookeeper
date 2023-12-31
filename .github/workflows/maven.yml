@@ -1,4 +1,4 @@
-name: surefire_mvn_build
+name: surefire_mvn_build_try
 
 on:
   push:
