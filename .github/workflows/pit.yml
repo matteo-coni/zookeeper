@@ -1,5 +1,4 @@
-name: pit_coverage
-
+name: pit
 on:
   push:
     branches: ["master"]
