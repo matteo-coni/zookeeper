@@ -3,15 +3,11 @@ package org.apache.zookeeper.server;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.data.ACL;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -121,7 +117,7 @@ public class CreateNodeDataTreeTest {
 
 
         } catch (KeeperException.NoNodeException | KeeperException.NodeExistsException e) {
-            //throw new RuntimeException(e);
+
             e.printStackTrace();
             error = e;
             Assert.assertNotNull(error);
@@ -140,7 +136,7 @@ public class CreateNodeDataTreeTest {
 
         try{
             System.out.println("\n"+ this.path + "\n");
-            //gia esiste
+            //gia esistente
             this.dataTree.createNode(this.path, this.data, this.acl, this.ephemeralOwner, this.parentCVersion, this.zxid, this.time);
             this.dataTree.createNode(this.path, this.data, this.acl, this.ephemeralOwner, this.parentCVersion, this.zxid, this.time);
 

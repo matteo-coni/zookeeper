@@ -83,8 +83,6 @@ public class PathUtilsTest {
             Assert.assertNotNull(error);
         }
 
-        //Assert.assertNull(error);
-
 
     }
 }
